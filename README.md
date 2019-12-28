@@ -56,3 +56,10 @@ Now, you can access the URLs http://localhost:8080 for Nuxt.js and http://localh
 If you see the 502 error page, just wait a bit when yarn install && yarn dev process will be finished.
 
 Enjoy your SSR Life!!
+
+### あとで英語で追記するメモたち
+* ホットリロードはデフォルトで有効になっているよ(設定はnuxt.config.jsに記載)
+* nodeコンテナ立ち上げと同時にyarn installとyarn dev実行しているから自分で実行しなくていいよ
+* clientとapiの中身はそれぞれnuxtとlaravelインストールしただけなので自分でやり直してもいいよ
+* 8081ポートは一応用意したけど外部からAPI使う予定ないなら本番では閉じておこうね
+

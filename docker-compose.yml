@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  # Server container
+  nginx:
+    build:
+      context: docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/logs:/var/log/nginx
+    ports:
+      # Normal Use
+      - 8080:80
+      # Confirmation of Laravel API
+      - 8081:81
+    links:
+      - node
+      - php
+
+  # API Container
+  php:
+    build:
+      context: docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./api:/var/www/api
+    environment:
+      # If you down want to use xDebug, set remote_enable=0
+      XDEBUG_CONFIG: "remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    links:
+      - mysql
+
+  # Front container
+  node:
+    build:
+      context: docker/node
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/var/www/client
+
+  # DB Container
+  mysql:
+    image: mysql:8.0.16
+    ports:
+      - 3306:3306
+    volumes:
+      - db-store:/var/lib/mysql
+      - ./logs:/var/log/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+
+volumes:
+  db-store:
+    driver: local
